@@ -594,6 +594,7 @@ extension SwiftStomp {
                 }
                 
             case .success(let message):
+                debugPrint("vukknezvuk SwiftStomp, meesage before processText: \(message)")
                 switch message {
                 case .string(let text):
                     self?.stompLog(type: .info, message: "vukknezvuk Socket: Received text")
