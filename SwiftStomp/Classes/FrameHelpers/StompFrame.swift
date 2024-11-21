@@ -89,8 +89,8 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
     }
     
     mutating func deserialize(frame: String) throws {
-//        var lines = frame.components(separatedBy: "\n")
-        var lines = frame
+        var lines = frame.components(separatedBy: "\n")
+//        var lines = frame.components(separatedBy: ",")
         
         // ** Remove first if was empty string
         if let firstLine = lines.first, firstLine.isEmpty {
@@ -132,7 +132,9 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
         
         // ** Parse body
 //        var body = lines.joined(separator: "\n")
-        var body = lines.joined()
+        var body = lines.joined(separator: """
+    
+        """)
         
         if body.hasSuffix("\0") {
             body = body.replacingOccurrences(of: "\0", with: "")
