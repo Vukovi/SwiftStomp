@@ -18,6 +18,9 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
     }
     
     init<X: Encodable>(name: T, headers: [String: String] = [:], encodableBody: X, jsonDateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .iso8601) {
+        
+        debugPrint("vukknezvuk STOMP-SDK: name - \(name)")
+        
         self.init(name: name, headers: headers)
         
         let jsonEncoder = JSONEncoder()
@@ -35,6 +38,8 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
     
     init(name: T, headers: [String: String] = [:], stringBody: String) {
         self.init(name: name, headers: headers)
+        
+        debugPrint("vukknezvuk STOMP-SDK: stringBody - \(stringBody)")
         
         self.body = stringBody
         if self.headers[StompCommonHeader.contentType.rawValue] == nil {
