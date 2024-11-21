@@ -58,21 +58,25 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
     }
     
     func serialize() -> String {
-        var frame = name.rawValue + "\n"
+        var frame = name.rawValue // + "\n"
         
         // ** Headers
         for (hKey, hVal) in headers {
-            frame += "\(hKey):\(hVal)\n"
+//            frame += "\(hKey):\(hVal)\n"
+            frame += "\(hKey):\(hVal)"
         }
         
         // ** Body
         if let stringBody = body as? String, !stringBody.isEmpty {
-            frame += "\n\(stringBody)"
+//            frame += "\n\(stringBody)"
+            frame += "\(stringBody)"
         } else if let dataBody = body as? Data, !dataBody.isEmpty {
             let dataAsBase64 = dataBody.base64EncodedString()
-            frame += "\n\(dataAsBase64)"
+//            frame += "\n\(dataAsBase64)"
+            frame += "\(dataAsBase64)"
         } else {
-            frame += "\n"
+//            frame += "\n"
+            frame += ""
         }
         
         // ** Add NULL char
@@ -85,7 +89,8 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
     }
     
     mutating func deserialize(frame: String) throws {
-        var lines = frame.components(separatedBy: "\n")
+//        var lines = frame.components(separatedBy: "\n")
+        var lines = frame.components(separatedBy: "\")
         
         // ** Remove first if was empty string
         if let firstLine = lines.first, firstLine.isEmpty {
@@ -126,7 +131,8 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
         }
         
         // ** Parse body
-        var body = lines.joined(separator: "\n")
+//        var body = lines.joined(separator: "\n")
+                                     var body = lines.joined(separator: "\")
         
         if body.hasSuffix("\0") {
             body = body.replacingOccurrences(of: "\0", with: "")
