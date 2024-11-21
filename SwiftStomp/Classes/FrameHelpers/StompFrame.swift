@@ -26,6 +26,8 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
         if let jsonData = try? jsonEncoder.encode(encodableBody),
            let jsonString = String(data: jsonData, encoding: .utf8)
         {
+            //TODO: remove debugPrint
+            debugPrint("vukknezvuk STOMP-SDK: json string - \(jsonString)")
             self.body = jsonString
             self.headers[StompCommonHeader.contentType.rawValue] = "application/json;charset=UTF-8"
         }
@@ -71,6 +73,9 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
         // ** Add NULL char
         frame += NULL_CHAR
         
+        //TODO: remove debugPrint
+        debugPrint("vukknezvuk STOMP-SDK: method - \(#function), frame: \(frame)")
+        
         return frame
     }
     
@@ -81,6 +86,9 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
         if let firstLine = lines.first, firstLine.isEmpty {
             lines.removeFirst()
         }
+        
+        //TODO: remove debugPrint
+        debugPrint("vukknezvuk STOMP-SDK: method - \(#function), lines: \(lines)")
         
         // ** Parse Command
         if let command = StompRequestFrame(rawValue: lines.first ?? "") {
@@ -124,6 +132,9 @@ internal struct StompFrame<T: RawRepresentable> where T.RawValue == String {
         } else {
             self.body = body
         }
+        
+        //TODO: remove debugPrint
+        debugPrint("vukknezvuk STOMP-SDK: method - \(#function), body: \(self.body)")
     }
     
     func getCommonHeader(_ header: StompCommonHeader) -> String? {

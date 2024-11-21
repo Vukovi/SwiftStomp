@@ -96,16 +96,19 @@ public class SwiftStomp: NSObject {
     private func initReachability(){
         if let reachability = try? Reachability(queueQoS: .utility, targetQueue: DispatchQueue(label: "swiftStomp.reachability"), notificationQueue: .global()) {
             reachability.whenReachable = { [weak self] _ in
-                self?.stompLog(type: .info, message: "Network IS reachable")
+                //TODO: remove vukknezvuk
+                self?.stompLog(type: .info, message: "vukknezvuk Network IS reachable")
                 self?.hostIsReachabile = true
             }
             reachability.whenUnreachable = { [weak self] _ in
-                self?.stompLog(type: .info, message: "Network IS NOT reachable")
+                //TODO: remove vukknezvuk
+                self?.stompLog(type: .info, message: "vukknezvuk Network IS NOT reachable")
                 self?.hostIsReachabile = false
             }
             self.reachability = reachability
         } else {
-            self.stompLog(type: .info, message: "Unable to create Reachability")
+            //TODO: remove vukknezvuk
+            self.stompLog(type: .info, message: "vukknezvuk Unable to create Reachability")
         }
     }
 }
@@ -113,8 +116,8 @@ public class SwiftStomp: NSObject {
 /// Public Operating functions
 public extension SwiftStomp{
     func connect(timeout : TimeInterval = 5, acceptVersion : String = "1.1,1.2", autoReconnect : Bool = false){
-
-        self.stompLog(type: .info, message: "Connecting...  autoReconnect: \(autoReconnect)")
+        //TODO: remove vukknezvuk
+        self.stompLog(type: .info, message: "vukknezvuk Connecting...  autoReconnect: \(autoReconnect)")
 
         self.autoReconnect = autoReconnect
 
@@ -201,6 +204,8 @@ public extension SwiftStomp{
 
     func send <T : Encodable> (body : T, to : String, receiptId : String? = nil, headers : [String : String]? = nil, jsonDateEncodingStrategy : JSONEncoder.DateEncodingStrategy = .iso8601){
         let headers = prepareHeadersForSend(to: to, receiptId: receiptId, headers: headers)
+        //TODO: remove debugPrint
+        debugPrint("vukknezvuk STOMP-SDK: method - \(#function), headers: \(headers)")
 
         self.sendFrame(frame: StompFrame(name: .send, headers: headers, encodableBody: body, jsonDateEncodingStrategy: jsonDateEncodingStrategy))
     }
@@ -404,6 +409,9 @@ fileprivate extension SwiftStomp{
 
     func processReceivedSocketText(text : String){
         var frame : StompFrame<StompResponseFrame>
+        
+        //TODO: remove debugPrint
+        debugPrint("vukknezvuk STOMP-SDK: method - \(#function), text: \(text)")
 
         //** Deserialize frame
         do{
@@ -417,7 +425,7 @@ fileprivate extension SwiftStomp{
 
         switch frame.name {
         case .message:
-            stompLog(type: .info, message: "Stomp: Message received: \(String(describing: frame.body))")
+            stompLog(type: .info, message: "vukknezvuk Stomp: Message received: \(String(describing: frame.body))")
 
             let messageId = frame.getCommonHeader(.messageId) ?? ""
             let destination = frame.getCommonHeader(.destination) ?? ""
@@ -450,12 +458,12 @@ fileprivate extension SwiftStomp{
 
         case .receipt:
             guard let receiptId = frame.getCommonHeader(.receiptId) else {
-                stompLog(type: .stompError, message: "Receipt message received without `receipt-id` header: \(text)")
+                stompLog(type: .stompError, message: "vukknezvuk Receipt message received without `receipt-id` header: \(text)")
                 return
             }
 
 
-            stompLog(type: .info, message: "Receipt received: \(receiptId)")
+            stompLog(type: .info, message: "vukknezvuk Receipt received: \(receiptId)")
 
             callbacksThread.async { [weak self] in
                 guard let self else { return }
@@ -480,7 +488,7 @@ fileprivate extension SwiftStomp{
             self.status = .socketConnected
 
             guard let briefDescription = frame.getCommonHeader(.message) else {
-                stompLog(type: .stompError, message: "Stomp error frame received without `message` header: \(text)")
+                stompLog(type: .stompError, message: "vukknezvuk Stomp error frame received without `message` header: \(text)")
                 return
             }
 
@@ -498,7 +506,7 @@ fileprivate extension SwiftStomp{
         case .connected:
             self.status = .fullyConnected
 
-            stompLog(type: .info, message: "Stomp: Connected")
+            stompLog(type: .info, message: "vukknezvuk Stomp: Connected")
 
             callbacksThread.async { [weak self] in
                 guard let self else { return }
@@ -506,24 +514,24 @@ fileprivate extension SwiftStomp{
                 self._eventsUpstream.send(.connected(type: .toStomp))
             }
         default:
-            stompLog(type: .info, message: "Stomp: Un-Processable content: \(text)")
+            stompLog(type: .info, message: "vukknezvuk Stomp: Un-Processable content: \(text)")
         }
     }
 
     func sendFrame(frame : StompFrame<StompRequestFrame>, completion : (() -> ())? = nil){
         guard let webSocketTask else {
-            stompLog(type: .info, message: "Unable to send frame \(frame.name.rawValue): WebSocket is not connected!")
+            stompLog(type: .info, message: "vukknezvuk Unable to send frame \(frame.name.rawValue): WebSocket is not connected!")
             return
         }
 
         switch self.status {
         case .socketConnected:
             if frame.name != .connect{
-                stompLog(type: .info, message: "Unable to send frame \(frame.name.rawValue): Stomp is not connected!")
+                stompLog(type: .info, message: "vukknezvuk Unable to send frame \(frame.name.rawValue): Stomp is not connected!")
                 return
             }
         case .socketDisconnected, .connecting:
-            stompLog(type: .info, message: "Unable to send frame \(frame.name.rawValue): Invalid state: \(self.status)")
+            stompLog(type: .info, message: "vukknezvuk Unable to send frame \(frame.name.rawValue): Invalid state: \(self.status)")
             return
         default:
             break
@@ -531,11 +539,11 @@ fileprivate extension SwiftStomp{
 
         let rawFrameToSend = frame.serialize()
 
-        stompLog(type: .info, message: "Stomp: Sending...\n\(rawFrameToSend)\n")
+        stompLog(type: .info, message: "vukknezvuk Stomp: Sending...\n\(rawFrameToSend)\n")
 
         webSocketTask.send(.string(rawFrameToSend)) { error in
             if let error = error {
-                self.stompLog(type: .stompError, message: "Error sending frame: \(error)")
+                self.stompLog(type: .stompError, message: "vukknezvuk Error sending frame: \(error)")
             }
 
             completion?()
@@ -569,25 +577,25 @@ fileprivate extension SwiftStomp{
 /// Web socket delegate
 extension SwiftStomp {
     private func listen() {
-        self.stompLog(type: .info, message: "Listening.")
+        self.stompLog(type: .info, message: "vukknezvuk Listening.")
         webSocketTask?.receive { [weak self] result in
             switch result {
             case .failure(let error):
-                self?.stompLog(type: .socketError, message: "Socket listen: Error: \(error)")
+                self?.stompLog(type: .socketError, message: "vukknezvuk Socket listen: Error: \(error)")
                 
                 self?.callbacksThread.async { [weak self] in
                     guard let self else { return }
-                    self.delegate?.onError(swiftStomp: self, briefDescription: "Stomp Error", fullDescription: error.localizedDescription, receiptId: nil, type: .fromStomp)
+                    self.delegate?.onError(swiftStomp: self, briefDescription: "vukknezvuk Stomp Error", fullDescription: error.localizedDescription, receiptId: nil, type: .fromStomp)
                 }
                 
             case .success(let message):
                 switch message {
                 case .string(let text):
-                    self?.stompLog(type: .info, message: "Socket: Received text")
+                    self?.stompLog(type: .info, message: "vukknezvuk Socket: Received text")
                     self?.processReceivedSocketText(text: text)
                     
                 case .data(let data):
-                    self?.stompLog(type: .info, message: "Socket: Received data: \(data.count)")
+                    self?.stompLog(type: .info, message: "vukknezvuk Socket: Received data: \(data.count)")
                     
                 default:
                     break
@@ -608,7 +616,7 @@ extension SwiftStomp: URLSessionWebSocketDelegate {
         self.status = .socketConnected
         self.invalidateConnector()
 
-        stompLog(type: .info, message: "Socket: connected, protocol: \(p)")
+        stompLog(type: .info, message: "vukknezvuk Socket: connected, protocol: \(p)")
 
         callbacksThread.async { [weak self] in
             guard let self else { return }
@@ -625,7 +633,7 @@ extension SwiftStomp: URLSessionWebSocketDelegate {
             r = String(data: d, encoding: .utf8) ?? ""
         }
 
-        stompLog(type: .info, message: "Socket: Disconnected: \(r) with code: \(closeCode.rawValue)")
+        stompLog(type: .info, message: "vukknezvuk Socket: Disconnected: \(r) with code: \(closeCode.rawValue)")
 
         handleDisconnect()
     }
@@ -635,13 +643,13 @@ extension SwiftStomp: URLSessionWebSocketDelegate {
             return
         }
         
-        stompLog(type: .socketError, message: "Socket: Error: \(error.localizedDescription)")
+        stompLog(type: .socketError, message: "vukknezvuk Socket: Error: \(error.localizedDescription)")
 
         handleDisconnect()
 
         callbacksThread.async { [weak self] in
             guard let self else { return }
-            self.delegate?.onError(swiftStomp: self, briefDescription: "Socket Error", fullDescription: error.localizedDescription, receiptId: nil, type: .fromSocket)
+            self.delegate?.onError(swiftStomp: self, briefDescription: "vukknezvuk Socket Error", fullDescription: error.localizedDescription, receiptId: nil, type: .fromSocket)
             self._eventsUpstream.send(.error(error: .init(error: error, type: .fromSocket)))
         }
     }

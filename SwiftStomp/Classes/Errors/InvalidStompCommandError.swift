@@ -8,7 +8,8 @@
 public class InvalidStompCommandError : Error{
     
     var localizedDescription: String {
-        return "Invalid STOMP command"
+        //TODO: remove vukknezvuk
+        return "vukknezvuk Invalid STOMP command"
     }
 }
 

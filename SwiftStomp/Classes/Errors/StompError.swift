@@ -25,6 +25,7 @@ public struct StompError: Error {
 
 extension StompError: CustomStringConvertible {
     public var description: String {
-        "StompError(\(type)) [receiptId: \(String(describing: receiptId))]: \(localizedDescription)"
+        //TODO: remove vukknezvuk
+        "vukknezvuk StompError(\(type)) [receiptId: \(String(describing: receiptId))]: \(localizedDescription)"
     }
 }
