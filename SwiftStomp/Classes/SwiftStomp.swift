@@ -269,15 +269,16 @@ public extension SwiftStomp{
 
         //** Check socket status
         guard let webSocketTask, self.status == .fullyConnected || self.status == .socketConnected else {
-            self.stompLog(type: .info, message: "Stomp: Unable to send `ping`. Socket is not connected!")
+            //TODO: remove vukknezvuk
+            self.stompLog(type: .info, message: "vukknezvuk Stomp: Unable to send `ping`. Socket is not connected!")
             return
         }
 
         webSocketTask.sendPing() { _ in
             completion?()
         }
-
-        self.stompLog(type: .info, message: "Stomp: Ping sent!")
+        //TODO: remove vukknezvuk
+        self.stompLog(type: .info, message: "vukknezvuk Stomp: Ping sent!")
 
         //** Reset ping timer
         self.resetPingTimer()
@@ -338,7 +339,8 @@ fileprivate extension SwiftStomp{
     }
 
     func scheduleConnector(){
-        self.stompLog(type: .info, message: "Scheduling connector")
+        //TODO: remove vukknezvuk
+        self.stompLog(type: .info, message: "vukknezvuk Scheduling connector")
 
         if let scheduler = self.reconnectScheduler, scheduler.isValid{
             scheduler.invalidate()
@@ -352,11 +354,12 @@ fileprivate extension SwiftStomp{
                 guard let self = self else {
                     return
                 }
-
-                self.stompLog(type: .info, message: "Reconnect scheduler running")
+                //TODO: remove vukknezvuk
+                self.stompLog(type: .info, message: "vukknezvuk Reconnect scheduler running")
 
                 if !self.hostIsReachabile{
-                    self.stompLog(type: .info, message: "Network is not reachable. Ignore connecting!")
+                    //TODO: remove vukknezvuk
+                    self.stompLog(type: .info, message: "vukknezvuk Network is not reachable. Ignore connecting!")
                     return
                 }
 
@@ -366,7 +369,8 @@ fileprivate extension SwiftStomp{
     }
 
     func invalidateConnector(){
-        self.stompLog(type: .info, message: "Invalidating connector")
+        //TODO: remove vukknezvuk
+        self.stompLog(type: .info, message: "vukknezvuk Invalidating connector")
 
         if let connector = self.reconnectScheduler, connector.isValid{
             connector.invalidate()
@@ -417,7 +421,8 @@ fileprivate extension SwiftStomp{
         do{
             frame = try StompFrame(withSerializedString: text)
         }catch {
-            stompLog(type: .stompError, message: "Process frame error: \(error.localizedDescription)")
+            //TODO: remove vukknezvuk
+            stompLog(type: .stompError, message: "vukknezvuk Process frame error: \(error.localizedDescription)")
             return
         }
 
