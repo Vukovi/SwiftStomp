@@ -186,13 +186,15 @@ public extension SwiftStomp{
         var headersToSend = StompHeaderBuilder
             .add(key: .destination, value: destination)
             .add(key: .id, value: id)
-            .add(key: .ack, value: mode.rawValue)
+//            .add(key: .ack, value: mode.rawValue)
             .get
 
         //** Append extra headers
         headers?.forEach({ hEntry in
             headersToSend[hEntry.key] = hEntry.value
         })
+        
+        debugPrint("vukknezvuk STOMP-SDK: method - \(#function), headersToSend: \(headersToSend)")
 
         self.sendFrame(frame: StompFrame(name: .subscribe, headers: headersToSend))
     }
