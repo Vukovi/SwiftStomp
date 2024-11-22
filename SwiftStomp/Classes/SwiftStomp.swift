@@ -176,6 +176,26 @@ public extension SwiftStomp{
 
         self.sendFrame(frame: StompFrame(name: .subscribe, headers: headersToSend))
     }
+    
+    func subscribe(
+        to destination: String,
+        id: String,
+        mode: StompAckMode = .auto,
+        headers: [String : String]? = nil
+    ){
+        var headersToSend = StompHeaderBuilder
+            .add(key: .destination, value: destination)
+            .add(key: .id, value: id)
+            .add(key: .ack, value: mode.rawValue)
+            .get
+
+        //** Append extra headers
+        headers?.forEach({ hEntry in
+            headersToSend[hEntry.key] = hEntry.value
+        })
+
+        self.sendFrame(frame: StompFrame(name: .subscribe, headers: headersToSend))
+    }
 
     func unsubscribe(from destination : String, mode : StompAckMode = .auto, headers : [String : String]? = nil){
         var headersToSend = StompHeaderBuilder
