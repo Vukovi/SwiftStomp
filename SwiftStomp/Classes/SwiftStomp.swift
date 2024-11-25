@@ -186,7 +186,7 @@ public extension SwiftStomp{
         var headersToSend = StompHeaderBuilder
             .add(key: .destination, value: destination)
             .add(key: .id, value: id)
-            .add(key: .ack, value: mode.rawValue)
+//            .add(key: .ack, value: mode.rawValue)
             .get
 
         //** Append extra headers
